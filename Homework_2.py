@@ -8,7 +8,7 @@ dict's values should be a number (0-100),
 example: [{'a': 5, 'b': 7, 'g': 11}, {'a': 3, 'c': 35, 'g': 42}] 
 """
 random_numbers = [] # create empty list which will contain the list of dict.
-for i in range(2,10): # loop 2 to 10 times to generate 2 to 10 dictionaries
+for _ in range(random.randint(2, 10)): # loop 2 to 10 times to generate 2 to 10 dictionaries
     random_dict = {} # create empty dict.
     for x in range(3): # this range is used to define how many key-value pairs will be in the dict
         key = random.choice(string.ascii_lowercase) # generate random keys in lowercase
