@@ -40,27 +40,30 @@ my_list = split_text(task) #create list which holds splited words
 #print(my_list)
 
 # part_4: find the "iz" and replace it with "is"
-for i in my_list: # Loop through the elements in the my_list
-    if re.match(r'^i.*?z$', i): # Check if the element matches the pattern '^i.*?z$'
-        index = my_list.index(i) # When match is found, find the index of the match in the list
-        my_list[index] = i.replace('z', 's') # Replace 'z' with 's' in the match
-
+def replace_z_with_s(input_list): # Define a function that takes a list as an argument
+    for i in input_list: # Loop through each element in the input list
+        if re.match(r'^i.*?z$', i):  # Check if the current element matches the pattern
+            index = my_list.index(i) # If it does, find the index of the current element in the list
+            my_list[index] = i.replace('z', 's') # Replace the "z" in the current element with "s"
+    return input_list
+my_list = replace_z_with_s(my_list)
+print(my_list)
 # part_5: Join the my_list and get the whole sentence + add capitalization of the first symbol after period.
-# function to capitalize the first symbol after period given the list of words
-def text_capitalize(some_lst_of_words):
-  task = ' '.join(some_lst_of_words) # Join the elements in the my_list with a space character as the separator
+# function to merge list and capitalize the first symbol after period given the list of words
+def merge_list_with_caps(lst_of_words):
+  task = ' '.join(lst_of_words) # Join the elements in the my_list with a space character as the separator
   task = task.strip() # Remove whitespaces from the string
   sentences = task.split(". ") # Split the sentence into separate sentences based on the period
   capitalized = [sentence.capitalize() for sentence in sentences] # Capitalize the first letter of each word in each sentence
   task = ". ".join(capitalized) # Join the sentences back together
   return task
 
-task = text_capitalize(my_list)
+task = merge_list_with_caps(my_list)
 print(task)
 
 # part_6: print last word of every sentence
-def last_words_func(some_text):
-  sentences = some_text.split(". ") # split sentence based on full stop 
+def get_last_words(input_text):
+  sentences = input_text.split(". ") # split sentence based on full stop 
   last_word_sentence = [] # make empty list to hold last words
   for sentence in sentences: # Loop through each sentence 
       words = sentence.split()  # Split the sentence into separate words
@@ -69,4 +72,4 @@ def last_words_func(some_text):
   last_word_sentence = " ".join(last_word_sentence) # Join last words together based on whitespace in order to form sentence
   return f"Sentence created from last words is: {last_word_sentence}"
 
-print(last_words_func(task))
+print(get_last_words(task))

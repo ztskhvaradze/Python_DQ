@@ -5,29 +5,29 @@ import random
 """ Following function accepts 3 numeric values, minimum, maximum and number (quantity) of "numbers" 
     and returns the random list of numbers based on the input values
 """
-def rand_numbers_func(min_digit, max_digit, num_quantity):
+def generate_rand_numbers (min_digit, max_digit, num_quantity):
     return [random.randint(min_digit,max_digit) for i in range(num_quantity)]
 
-rand_numbers = rand_numbers_func(0,1000,100)
+rand_numbers = generate_rand_numbers(0,1000,100)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------#
 """ Following function accepts list as argument and sorts the list by ascending order
 """
 # Task_2: sort list from min to max (without using sort())
-def sort_func(num_lst):
+def sort_list(input_list):
    # sorted_rand_numbers = num_lst #create new variable which holds rand_number values and will be sorted afterwards
-    for i in range(len(num_lst)): # create the locator which will tell which position in the list we are currently
-        for x in range(i + 1, len(num_lst)): # compare the value at the current position with all values after it in the list.
-            if num_lst[i] > num_lst[x]: # If the value at the current position is greater than the value at a next position, than
-                num_lst[i], num_lst[x] = num_lst[x], num_lst[i] # the two values are swapped using tuple unpacking
-    return num_lst
+    for i in range(len(input_list)): # create the locator which will tell which position in the list we are currently
+        for x in range(i + 1, len(input_list)): # compare the value at the current position with all values after it in the list.
+            if input_list[i] > input_list[x]: # If the value at the current position is greater than the value at a next position, than
+                input_list[i], input_list[x] = input_list[x], input_list[i] # the two values are swapped using tuple unpacking
+    return input_list
 
-sorted_rand_numbers = sort_func(rand_numbers)
+sorted_rand_numbers = sort_list(rand_numbers)
 print(sorted_rand_numbers)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------#
 """ Following function accepts list as argument and returns average value for even and odd numbers
 """
 # Task_3: calculate average for even and odd numbers
-def average_func(input_lst):
+def get_average_even_odd(input_lst):
     even_numbers = [] # create empty list which will hold even numbers
     odd_numbers = [] # create empty list which will hold odd numbers
     average_even = 0 # create variable with default value of 0 which will be changed afterwards and hold the average value for even nums
@@ -41,6 +41,6 @@ def average_func(input_lst):
     # Finally, changing the default value of variables with average value (rounded to 2 decimal points for better visual)
     average_even = sum(even_numbers) / len(even_numbers)
     average_odd = sum(odd_numbers) / len(odd_numbers)
-    return "Average value for even numbers is: " + str(round(average_even, 2)) + "\nAverage value for odd numbers is: " + str(round(average_odd, 2))
+    return round(average_even, 2), round(average_odd, 2)
 
-print(average_func(sorted_rand_numbers))
+print(get_average_even_odd(sorted_rand_numbers))
