@@ -1,8 +1,7 @@
-from classes.Ad import Ad as Ad
-from classes.News import News as News
-from classes.WeatherForecast import WeatherForecast as WeatherForecast
-from classes.Records import Records as Records
-import datetime as dt
+if __name__ == '__main__':
+    from classes.records import Records
+    import datetime as dt
+
 
 # Prompt the user to input a filename for the notebook.
 filename = input("Please enter a filename for the notebook where results will be saved (without file extension): ")
@@ -32,6 +31,9 @@ if greeting.lower() == 'news':
 elif greeting.lower() == 'ad':
     text = input("Please input some text: ")
     user_input_date = input("Please advertising's end date (in DD-MM-YYYY format): ")
+    if not user_input_date:
+    # Get tomorrow's date as default if user input was empty string
+        user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime('%d-%m-%Y')
     user_date = dt.datetime.strptime(user_input_date, '%d-%m-%Y').date()
     days_left = (user_date - dt.date.today()).days
 
@@ -41,6 +43,11 @@ elif greeting.lower() == 'ad':
 elif greeting.lower() == 'weather':
     city = input("Please enter city: ")
     user_input_date = input("Please enter forcasted date (in DD-MM-YYYY format): ")
+    if not user_input_date:
+        # Get tomorrow's date as default if user input was empty string
+        user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime('%d-%m-%Y')
+# Add the file extension to the filename.
+    filename = f"{filename}.txt"
     user_date = dt.datetime.strptime(user_input_date, '%d-%m-%Y').date()
     high_temperature = input("Please enter max temp: ")
     low_temperature = input("Please enter min temp: ")
@@ -48,5 +55,7 @@ elif greeting.lower() == 'weather':
 
     record.write_weather(city, user_date, high_temperature, low_temperature, conditions)
 else:
-    print("Sorry, I didn't understand your request, because your answer did not match any of the provided options, please try again")
+    print(("Sorry, I didn't understand your request,\n"
+            "because your answer did not match any of the provided options.\n"
+             "please, try again"))
 

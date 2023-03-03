@@ -1,4 +1,4 @@
-class Ad():
+class Ad:
     def __init__(self, _text, _ad_date, _days_left):
         self.text = _text
         self.ad_date = _ad_date

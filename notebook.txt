@@ -1,0 +1,14 @@
+News -------------------------
+some big news
+Tbilisi, 03/03/2023 16.27
+------------------------------
+Private ad -------------------
+some cool ad
+Actual until, 2023-05-01, 59 days left
+------------------------------
+Weather forecast -------------
+Forecast for Batumi on 04-03-2023:
+High temperature: 15 celsius
+Low temperature: 10 celsius
+Conditions: rainy
+------------------------------

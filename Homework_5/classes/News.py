@@ -6,5 +6,5 @@ class News:
 
     def publish_news(self):
         news_article = (f"{self.text}\n"
-                        f"{self.city}, {self.create_date}\n")
+                        f"{self.city}, {self.create_date}")
         return news_article

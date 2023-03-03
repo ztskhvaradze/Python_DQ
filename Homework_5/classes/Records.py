@@ -1,6 +1,6 @@
-from classes.Ad import Ad as Ad
-from classes.News import News as News
-from classes.WeatherForecast import WeatherForecast as WeatherForecast
+from classes.ad import Ad
+from classes.news import News
+from classes.weather_forecast import Weather_forecast
 import datetime as dt
 
 class Records:
@@ -12,60 +12,28 @@ class Records:
         news = News(text, city, create_date)
         news.publish_news()
         with open(self.filename, 'a') as f:
-            f.write(
-f"""
-News -------------------------
-{news.publish_news()}
-------------------------------
-\n
-""")
+            f.write((f"News -------------------------\n"
+                     f"{news.publish_news()}\n"
+                      "------------------------------\n"))
 
     def write_ad(self, text, user_date):
         days_left = (user_date - dt.date.today()).days
         ad = Ad(text, user_date, days_left)
         ad.publish_ad()
         with open(self.filename, 'a') as f:
-            f.write(f"""
-Private ad -------------------
-{ad.publish_ad()}
-------------------------------\n
-""")
-
+            f.write((f"Private ad -------------------\n"
+                      f"{ad.publish_ad()}\n"
+                      "------------------------------\n"))
 
     def write_weather(self, city, user_date, high_temperature, low_temperature, conditions):
         # Convert the date object to string using strftime method
         user_date_str = user_date.strftime('%d-%m-%Y')
         # create a WeatherForecast object with the given input options
-        weather = WeatherForecast(city, user_date_str, high_temperature, low_temperature, conditions)
+        weather = Weather_forecast(city, user_date_str, high_temperature, low_temperature, conditions)
         # append the forecast to a file
         with open(self.filename, 'a') as f:
-            f.write(f"""
-Weather forecast -------------
-{weather.publish_forecast()}
-------------------------------\n
-""")
+            f.write((f"Weather forecast -------------\n"
+                     f"{weather.publish_forecast()}\n"
+                      "------------------------------\n"))
 
-if __name__ == '__main__':
-    record = Records()
-    greeting = input("Hello, please select data type. 'News', 'Ad' or 'Weather': ")
-
-    if greeting.lower() == 'news':
-        text = input("Please input some text: ")
-        city = input("Please enter city: ")
-        record.write_news(text, city)
-
-    elif greeting.lower() == 'ad':
-        text = input("Please input some text: ")
-        user_input_date = input("Please advertising's end date (in DD-MM-YYYY format): ")
-        record.write_ad(text, user_input_date)
-
-    elif greeting.lower() == 'weather':
-        city = input("Please enter city: ")
-        user_input_date = input("Please enter forecasted date (in DD-MM-YYYY format): ")
-        high_temperature = input("Please enter max temp: ")
-        low_temperature = input("Please enter min temp: ")
-        conditions = input("Please enter weather conditions (like sunny, rainy, etc.): ")
-        record.write_weather(city, user_input_date, high_temperature, low_temperature, conditions)
-
-    else:
-        print("Sorry, I didn't understand your request, because your answer did not match any of the provided options, please try again")
+        
