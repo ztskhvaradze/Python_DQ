@@ -1,20 +1,10 @@
 News -------------------------
-
 This is the first news article.
-
 New York, 05/03/2023 12.30
-
 ------------------------------
-
 Weather forecast -------------
-
 Forecast for Paris on 06-03-2023:
-
 High temperature: 20 celsius
-
 Low temperature: 10 celsius
-
 Conditions: my conditions
-
 ------------------------------
-

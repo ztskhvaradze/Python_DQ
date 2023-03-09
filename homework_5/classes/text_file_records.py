@@ -29,14 +29,26 @@ class TextFileRecords:
         # Return the list of records
         return records
 
-    def write_processed_records(self, records):
-        # Open a new file in write mode to hold the processed records
-        with open('records_from_file.txt', 'w') as f:
+    # def write_processed_records(self, records):
+    #     # Open a new file in write mode to hold the processed records
+    #     with open('records_from_file.txt', 'w') as f:
+    #         # Write each line of each record to the file
+    #         for record in records:
+    #             for line in record:
+    #                 f.write(line)
+    #                 f.write('\n')
+    @staticmethod
+    def write_processed_records(records):
+        # Get the directory where the application is located
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+        # Construct the file path for the output file relative to the application directory
+        output_file_path = os.path.join(app_dir, 'records_from_file.txt')
+        # Open the output file in write mode
+        with open(output_file_path, 'w') as f:
             # Write each line of each record to the file
             for record in records:
                 for line in record:
                     f.write(line)
-                    f.write('\n')
 
     def remove_file(self):
         # Attempt to remove the file, and print an error message if it can't be found

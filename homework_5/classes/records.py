@@ -1,5 +1,4 @@
 import datetime as dt
-
 from .ad import Ad
 from .news import News
 from .weather_forecast import WeatherForecast
