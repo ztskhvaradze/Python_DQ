@@ -1,6 +1,7 @@
 import os
 
-class Text_filele_records:
+
+class TextFileRecords:
     def __init__(self, filename):
         # Initialize the TextFileRecords object with the provided filename
         self.filename = filename

@@ -1,4 +1,4 @@
-class Weather_forecast:
+class WeatherForecast:
     def __init__(self, _city, _forecast_date, _high_temperature,
                  _low_temperature, _conditions):
         self.city = _city

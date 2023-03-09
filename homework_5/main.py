@@ -1,7 +1,8 @@
-from classes.records import Records
 import datetime as dt
 import os
-from classes.text_filele_records import Text_filele_records as txt_rec
+
+from classes.records import Records
+from classes.text_file_records import TextFileRecords
 
 
 # create main function to execute the functionality
@@ -18,7 +19,7 @@ def create_notebook():
         if not os.path.exists(filename):
             print("File not found.")
             return
-        text_file_records = txt_rec(filename)
+        text_file_records = TextFileRecords(filename)
         # Read the records from the text file
         records = text_file_records.read_records()
         # Save the records to a new file in the default path
@@ -77,4 +78,5 @@ def create_notebook():
                 user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime
 
 
-create_notebook()
+if __name__ == '__main__':
+    create_notebook()
