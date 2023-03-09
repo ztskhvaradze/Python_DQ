@@ -1,6 +1,6 @@
-from classes.ad import Ad
-from classes.news import News
-from classes.weather_forecast import Weather_forecast
+from ad import Ad
+from news import News
+from weather_forecast import Weather_forecast
 import datetime as dt
 
 
