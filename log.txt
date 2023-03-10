@@ -12,3 +12,7 @@ High temperature: 20 celsius
 Low temperature: 10 celsius
 Conditions: rain
 ------------------------------
+News -------------------------
+some big news
+batumi, 09/03/2023 09.01
+------------------------------

@@ -1,7 +1,7 @@
-from classes.ad import Ad
-from classes.news import News
-from classes.weather_forecast import Weather_forecast
 import datetime as dt
+from .ad import Ad
+from .news import News
+from .weather_forecast import WeatherForecast
 
 
 class Records:
@@ -30,7 +30,7 @@ class Records:
         # Convert the date object to string using strftime method
         user_date_str = user_date.strftime('%d-%m-%Y')
         # create a WeatherForecast object with the given input options
-        weather = Weather_forecast(
+        weather = WeatherForecast(
             city, user_date_str, high_temperature, low_temperature, conditions)
         # append the forecast to a file
         with open(self.filename, 'a') as f:
