@@ -12,11 +12,12 @@ def take_from_text_file():
     if not os.path.exists(filename):
         print("File not found.")
         return
+    # Initialize a TextFileRecords object with the provided filename
     text_file_records = TextFileRecords(filename)
     # Read the records from the text file
-    records = text_file_records.read_records()
+    records_text = text_file_records.read_records()
     # Save the records to a new file in the default path
-    TextFileRecords.write_processed_records(records)
+    TextFileRecords.write_processed_records(records_text)
     # Prompt the user to choose whether to remove the source file
     remove_file = input("Do you want to remove the source file after it is processed? (y/n): ")
     if remove_file.lower() == 'y':
@@ -71,4 +72,5 @@ def take_from_user_input():
             "Please enter forecasted date (in DD-MM-YYYY format): ")
         if not user_input_date:
             # Get tomorrow's date as default if user input was empty string
-            user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime
+            user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime('%d-%m-%Y')
+
