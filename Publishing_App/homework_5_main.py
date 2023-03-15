@@ -1,7 +1,10 @@
 import os
 import datetime as dt
-from .text_file_records import TextFileRecords
-from .records import Records
+from classes.text_file_records import TextFileRecords
+from classes.text_statistics import TextStatistics
+from classes.news import News
+from classes.ad import Ad
+from classes.weather_forecast import WeatherForecast
 
 
 def take_from_text_file():
@@ -40,7 +43,7 @@ def take_from_user_input():
     # Add the file extension to the filename.
     filename = f"{filename}.txt"
 
-    record = Records(filename)
+    record = TextStatistics(filename)
     # Prompt the user to select a data type ('News', 'Ad', or 'Weather')
     # and store their input in the 'greeting' variable.
     greeting = input("Hello, please select data type. 'News', 'Ad' or 'Weather': ")
@@ -52,8 +55,9 @@ def take_from_user_input():
     if greeting.lower() == 'news':
         text = input("Please input some text: ")
         city = input("Please enter city: ")
-
-        record.write_news(text, city)
+        create_date = dt.datetime.now().strftime('%d/%m/%Y %H.%M')
+        news = News(text, city, create_date)
+        news.write_news(filename)
 
     # If the user selected 'Ad', prompt them to input some text and
     #  the end date of the ad in the format 'DD-MM-YYYY'.
@@ -63,21 +67,46 @@ def take_from_user_input():
         text = input("Please input some text: ")
         user_input_date = input("Please advertising's end date (in DD-MM-YYYY format): ")
         if not user_input_date:
-            # Get tomorrow's date as default if user input was empty string
             user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime('%d-%m-%Y')
         user_date = dt.datetime.strptime(user_input_date, '%d-%m-%Y').date()
 
-        record.write_ad(text, user_date)
+        days_left = (user_date - dt.date.today()).days
+        ad = Ad(text, user_date, days_left)
+        ad.write_ad(filename)
     # If the user selected 'Weather', prompt them to input the city,
     # forecasted date in the format 'DD-MM-YYYY',
     # high and low temperature, and weather conditions.
     elif greeting.lower() == 'weather':
         city = input("Please enter city: ")
-        user_input_date = input(
-            "Please enter forecasted date (in DD-MM-YYYY format): ")
+        user_input_date = input("Please enter forecasted date (in DD-MM-YYYY format): ")
+
         if not user_input_date:
             # Get tomorrow's date as default if user input was empty string
             user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime('%d-%m-%Y')
-    # Write the results to CSV files
+
+        user_date = dt.datetime.strptime(user_input_date, '%d-%m-%Y').date()
+        high_temperature = float(input("Please input the high temperature: "))
+        low_temperature = float(input("Please input the low temperature: "))
+        conditions = input("Please input the weather conditions: ")
+
+        user_date_str = user_date.strftime('%d-%m-%Y')
+        weather = WeatherForecast(city, user_date_str, high_temperature, low_temperature, conditions)
+        weather.write_weather(filename)
+
+        # Write the results to CSV files
     record.write_results_to_csv()
 
+
+def main():
+    # Ask the user to select a source for records
+    source = input("Please select a source for records. 'Text file' or 'User input': ")
+    if source.lower() == 'text file':
+        # If the user selects "Text file", call the take_from_text_file function and capture the result
+        take_from_text_file()
+    elif source.lower() == 'user input':
+        # If the user selects "User input", call the take_from_user_input function
+        take_from_user_input()
+
+
+if __name__ == '__main__':
+    main()

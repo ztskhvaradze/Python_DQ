@@ -1,5 +1,5 @@
 import os
-from .records import Records
+from .text_statistics import TextStatistics
 
 
 class TextFileRecords:
@@ -51,6 +51,6 @@ class TextFileRecords:
             print(f"{self.filename} not found.")
 
     def get_records_object(self):
-        records = Records(self.filename)
+        records = TextStatistics(self.filename)
         records.records = self.write_processed_records
         return records

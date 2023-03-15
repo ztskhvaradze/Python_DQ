@@ -1,51 +1,15 @@
-import datetime as dt
 from collections import Counter
 import csv
 import os
 import string
-import re
-
-from .ad import Ad
-from .news import News
-from .weather_forecast import WeatherForecast
 
 
-class Records:
+class TextStatistics:
     def __init__(self, filename):
         self.filename = filename
         if not os.path.exists(filename):
             with open(filename, 'w') as f:
                 f.write('')
-
-    def write_news(self, text, city):
-        create_date = dt.datetime.now().strftime('%d/%m/%Y %H.%M')
-        news = News(text, city, create_date)
-        news.publish_news()
-        with open(self.filename, 'a') as f:
-            f.write((f"News -------------------------\n"
-                     f"{news.publish_news()}\n"
-                     "------------------------------\n"))
-
-    def write_ad(self, text, user_date):
-        days_left = (user_date - dt.date.today()).days
-        ad = Ad(text, user_date, days_left)
-        ad.publish_ad()
-        with open(self.filename, 'a') as f:
-            f.write((f"Private ad -------------------\n"
-                     f"{ad.publish_ad()}\n"
-                     "------------------------------\n"))
-
-    def write_weather(self, city, user_date, high_temperature, low_temperature, conditions):
-        # Convert the date object to string using strftime method
-        user_date_str = user_date.strftime('%d-%m-%Y')
-        # create a WeatherForecast object with the given input options
-        weather = WeatherForecast(
-            city, user_date_str, high_temperature, low_temperature, conditions)
-        # append the forecast to a file
-        with open(self.filename, 'a') as f:
-            f.write((f"Weather forecast -------------\n"
-                     f"{weather.publish_forecast()}\n"
-                     "------------------------------\n"))
 
     def count_words(self):
         with open(self.filename, 'r', encoding='utf-8') as f:
@@ -70,22 +34,16 @@ class Records:
         count_lowercase = sum(1 for c in contents if c.islower() and c.isalpha())
         count_space = sum(1 for c in contents if c.isspace())
         count_letters = count_all - count_space
-        if count_letters == 0:
-            return {
-                'count_all': count_all,
-                'count_uppercase': count_uppercase,
-                'count_lowercase': count_lowercase,
-                'count_letters': count_letters,
-                'percentage_uppercase': 0,
-                'percentage_lowercase': 0
-            }
+        percentage_uppercase = 0 if count_letters == 0 else count_uppercase / count_letters * 100
+        percentage_lowercase = 0 if count_letters == 0 else count_lowercase / count_letters * 100
+
         return {
             'count_all': count_all,
             'count_uppercase': count_uppercase,
             'count_lowercase': count_lowercase,
             'count_letters': count_letters,
-            'percentage_uppercase': count_uppercase / count_letters * 100,
-            'percentage_lowercase': count_lowercase / count_letters * 100
+            'percentage_uppercase': round(percentage_uppercase, 2),
+            'percentage_lowercase': round(percentage_lowercase, 2)
         }
 
     def write_results_to_csv(self):
