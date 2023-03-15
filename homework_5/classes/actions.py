@@ -18,6 +18,11 @@ def take_from_text_file():
     records_text = text_file_records.read_records()
     # Save the records to a new file in the default path
     TextFileRecords.write_processed_records(records_text)
+    # Get the Records object from the TextFileRecords object
+    records_object = text_file_records.get_records_object()
+    # Write the results to CSV files
+    records_object.write_results_to_csv()
+
     # Prompt the user to choose whether to remove the source file
     remove_file = input("Do you want to remove the source file after it is processed? (y/n): ")
     if remove_file.lower() == 'y':
@@ -73,4 +78,6 @@ def take_from_user_input():
         if not user_input_date:
             # Get tomorrow's date as default if user input was empty string
             user_input_date = (dt.datetime.now() + dt.timedelta(days=1)).strftime('%d-%m-%Y')
+    # Write the results to CSV files
+    record.write_results_to_csv()
 

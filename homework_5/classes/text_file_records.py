@@ -1,4 +1,5 @@
 import os
+from .records import Records
 
 
 class TextFileRecords:
@@ -48,3 +49,8 @@ class TextFileRecords:
             os.remove(self.filename)
         except FileNotFoundError:
             print(f"{self.filename} not found.")
+
+    def get_records_object(self):
+        records = Records(self.filename)
+        records.records = self.write_processed_records
+        return records
