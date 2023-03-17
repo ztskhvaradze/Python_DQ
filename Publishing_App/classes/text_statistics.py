@@ -15,7 +15,7 @@ class TextStatistics:
         with open(self.filename, 'r', encoding='utf-8') as f:
             lines = f.readlines()
             words = [word for line in lines[1:] for word in line.split()]
-        ascii_words = [word.translate(str.maketrans('', '', string.punctuation)) for word in words]
+        ascii_words = [word.translate(str.maketrans('', '', string.punctuation)).lower() for word in words]
         ascii_words = [word for word in ascii_words if word.isascii() and not word.isdigit() and len(word) > 1]
         word_counts = Counter(ascii_words)
         return dict(word_counts)
