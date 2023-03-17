@@ -1,6 +1,3 @@
-import datetime as dt
-
-
 class News:
     def __init__(self, _text, _city, _create_date):
         self.text = _text

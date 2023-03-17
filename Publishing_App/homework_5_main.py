@@ -19,8 +19,12 @@ def take_from_text_file():
     text_file_records = TextFileRecords(filename)
     # Read the records from the text file
     records_text = text_file_records.read_records()
-    # Save the records to a new file in the default path
-    TextFileRecords.write_processed_records(records_text)
+    # Get the directory where the application is located
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+    # Construct the file path for the output file relative to the application directory
+    output_file_path = os.path.join(app_dir, 'records_from_file.txt')
+    # Save the records to a new file in the same directory as main.py
+    TextFileRecords.write_processed_records(records_text, output_file_path)
     # Get the Records object from the TextFileRecords object
     records_object = text_file_records.get_records_object()
     # Write the results to CSV files
