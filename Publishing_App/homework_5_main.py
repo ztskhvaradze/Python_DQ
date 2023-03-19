@@ -8,8 +8,6 @@ from classes.ad import Ad
 from classes.weather_forecast import WeatherForecast
 
 
-import json
-
 def take_from_file():
     # Prompt the user to enter the filename for the file
     filename = input("Please enter the filename of the file"
@@ -82,7 +80,6 @@ def take_from_file():
     if remove_file.lower() == 'y':
         os.remove(filename)
 
-# C:\Users\Zaur_Tskhvaradze\Desktop\json_test_file.json
 
 def take_from_user_input():
     # Prompt the user to input a filename for the notebook.
