@@ -1,5 +1,6 @@
 import os
 import datetime as dt
+import json
 from classes.text_file_records import TextFileRecords
 from classes.text_statistics import TextStatistics
 from classes.news import News
@@ -7,34 +8,81 @@ from classes.ad import Ad
 from classes.weather_forecast import WeatherForecast
 
 
-def take_from_text_file():
-    # Prompt the user to enter the filename for the text file
-    filename = input("Please enter the filename of the file (file should be in .txt format) or"
-                     " the full path if file is in another directory: ")
+import json
+
+def take_from_file():
+    # Prompt the user to enter the filename for the file
+    filename = input("Please enter the filename of the file"
+                     "(file should be in .txt or .json format)"
+                     "or the full path if file is in another directory: ")
     # Check if the file exists
     if not os.path.exists(filename):
         print("File not found.")
         return
-    # Initialize a TextFileRecords object with the provided filename
-    text_file_records = TextFileRecords(filename)
-    # Read the records from the text file
-    records_text = text_file_records.read_records()
-    # Get the directory where the application is located
-    app_dir = os.path.dirname(os.path.abspath(__file__))
-    # Construct the file path for the output file relative to the application directory
-    output_file_path = os.path.join(app_dir, 'records_from_file.txt')
-    # Save the records to a new file in the same directory as main.py
-    TextFileRecords.write_processed_records(records_text, output_file_path)
-    # Get the Records object from the TextFileRecords object
-    records_object = text_file_records.get_records_object()
-    # Write the results to CSV files
-    records_object.write_results_to_csv()
+    # Check the file extension to determine how to read the file
+    if filename.endswith(".txt"):
+        # Initialize a TextFileRecords object with the provided filename
+        text_file_records = TextFileRecords(filename)
+        # Read the records from the provided file
+        records_text = text_file_records.read_records()
+        # Get the directory where the application is located
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+        # Construct the file path for the output file relative to the application directory
+        output_file_path = os.path.join(app_dir, 'records_from_file.txt')
+        # Save the records to a new file in the same directory as main.py
+        TextFileRecords.write_processed_records(records_text, output_file_path)
+        # Get the Records object from the TextFileRecords object
+        records_object = text_file_records.get_records_object()
+        # Write the results to CSV files
+        records_object.write_results_to_csv()
+    elif filename.endswith(".json"):
+        with open(filename) as f:
+            data = json.load(f)
+        # Process the data from the JSON file as needed
+        # In this example, we assume the JSON file contains a dictionary
+        # where each key represents a record and each value is another dictionary
+        # that contains the record data.
+        # We can loop through the keys and process each record separately.
+        records_text = []
+        for record_id, record_data in data.items():
+            if record_data["publication_type"] == "news":
+                # Create a News object and add the delimiter
+                news = News(record_data["text"], record_data["city"], dt.datetime.now().strftime('%d/%m/%Y %H.%M'))
+                records_text.append("News -------------------------")
+                records_text.append(news.publish_news())
+                records_text.append("------------------------------")
+            elif record_data["publication_type"] == "ad":
+                # If the publication type is "ad", create an Ad object
+                ad_date = dt.datetime.strptime(record_data["date"], '%Y-%m-%d').date()
+                days_left = (ad_date - dt.date.today()).days
+                ad = Ad(record_data["text"], ad_date, days_left)
+                records_text.append(
+                    f"Ad ---------------------------\n{ad.publish_ad()}\n------------------------------")
+            elif record_data["publication_type"] == "weather":
+                # If the publication type is "weather", create a WeatherForecast object
+                forecast_date = dt.datetime.strptime(record_data["forecast_date"], '%Y-%m-%d').date()
+                forecast = WeatherForecast(record_data["city"], forecast_date, record_data["high_temperature"],
+                                           record_data["low_temperature"], record_data["conditions"])
+                records_text.append(f"Weather forecast -------------")
+                records_text.append(forecast.publish_forecast())
+                records_text.append("------------------------------")
+
+        # Get the directory where the application is located
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+        # Construct the file path for the output file relative to the application directory
+        output_file_path = os.path.join(app_dir, 'records_from_file.txt')
+        # Save the records to a new file in the same directory as main.py
+        TextFileRecords.write_processed_records(records_text, output_file_path)
+        # Write the results to CSV files
+        records_object = TextStatistics(output_file_path)
+        records_object.write_results_to_csv()
 
     # Prompt the user to choose whether to remove the source file
     remove_file = input("Do you want to remove the source file after it is processed? (y/n): ")
     if remove_file.lower() == 'y':
-        text_file_records.remove_file()
+        os.remove(filename)
 
+# C:\Users\Zaur_Tskhvaradze\Desktop\json_test_file.json
 
 def take_from_user_input():
     # Prompt the user to input a filename for the notebook.
@@ -103,10 +151,10 @@ def take_from_user_input():
 
 def main():
     # Ask the user to select a source for records
-    source = input("Please select a source for records. 'Text file' or 'User input': ")
-    if source.lower() == 'text file':
-        # If the user selects "Text file", call the take_from_text_file function and capture the result
-        take_from_text_file()
+    source = input("Please select a source for records. 'Provide file' or 'User input': ")
+    if source.lower() == 'provide file':
+        # If the user selects "Provide file", call the take_from_file function and capture the result
+        take_from_file()
     elif source.lower() == 'user input':
         # If the user selects "User input", call the take_from_user_input function
         take_from_user_input()
