@@ -1,0 +1,22 @@
+{
+    "first": {
+        "publication_type": "ad",
+        "text": "some great advertisement",
+        "date": "2023-05-01"
+    },
+
+    "second": {
+        "publication_type": "news",
+        "text": "Some big news",
+        "city": "Tbilisi"
+    },
+
+    "third": {
+        "publication_type": "weather",
+        "city": "Batumi",
+        "forecast_date": "2023-01-05",
+        "high_temperature": 25,
+        "low_temperature": 15,
+        "conditions": "Sunny"
+    }
+}
