@@ -6,6 +6,7 @@ from classes.text_statistics import TextStatistics
 from classes.news import News
 from classes.ad import Ad
 from classes.weather_forecast import WeatherForecast
+from classes.xml_file_records import XMLFileRecords
 
 
 def take_from_file():
@@ -62,6 +63,36 @@ def take_from_file():
                 forecast = WeatherForecast(record_data["city"], forecast_date, record_data["high_temperature"],
                                            record_data["low_temperature"], record_data["conditions"])
                 records_text.append(f"Weather forecast -------------")
+                records_text.append(forecast.publish_forecast())
+                records_text.append("------------------------------")
+    elif filename.endswith(".xml"):
+        # Read records from XML file
+        xml_file_records = XMLFileRecords(filename)
+        records = xml_file_records.read_records()
+        records_text = []
+        for record in records:
+            record_type = record.get("type")
+            if record_type == "news":
+                # Create a News object and add the delimiter
+                news = News(record.find("text").text, record.find("city").text,
+                            dt.datetime.now().strftime('%d/%m/%Y %H.%M'))
+                records_text.append("News -------------------------")
+                records_text.append(news.publish_news())
+                records_text.append("------------------------------")
+            elif record_type == "ad":
+                # If the publication type is "ad", create an Ad object
+                ad_date = dt.datetime.strptime(record.find("date").text, '%Y-%m-%d').date()
+                days_left = (ad_date - dt.date.today()).days
+                ad = Ad(record.find("text").text, ad_date, days_left)
+                records_text.append(
+                    f"Ad ---------------------------\n{ad.publish_ad()}\n------------------------------")
+            elif record_type == "weather":
+                # If the publication type is "weather", create a WeatherForecast object
+                forecast_date = dt.datetime.strptime(record.find("forecast_date").text, '%Y-%m-%d').date()
+                forecast = WeatherForecast(record.find("city").text, forecast_date,
+                                           record.find("high_temperature").text,
+                                           record.find("low_temperature").text, record.find("conditions").text)
+                records_text.append("Weather forecast -------------")
                 records_text.append(forecast.publish_forecast())
                 records_text.append("------------------------------")
 

@@ -1,0 +1,14 @@
+Ad ---------------------------
+some XML advertisement
+Actual until, 2023-05-01, 41 days left
+------------------------------
+News -------------------------
+Some XML news
+Tbilisi, 21/03/2023 20.50
+------------------------------
+Weather forecast -------------
+Forecast for Batumi in XML file on 2023-01-05:
+High temperature: 25 celsius
+Low temperature: 15 celsius
+Conditions: Sunny
+------------------------------
