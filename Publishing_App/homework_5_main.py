@@ -6,12 +6,13 @@ from classes.text_statistics import TextStatistics
 from classes.news import News
 from classes.ad import Ad
 from classes.weather_forecast import WeatherForecast
+from classes.xml_file_records import XMLFileRecords
 
 
 def take_from_file():
     # Prompt the user to enter the filename for the file
     filename = input("Please enter the filename of the file"
-                     "(file should be in .txt or .json format)"
+                     "(file should be in .txt .json or .xml format)"
                      "or the full path if file is in another directory: ")
     # Check if the file exists
     if not os.path.exists(filename):
@@ -36,11 +37,7 @@ def take_from_file():
     elif filename.endswith(".json"):
         with open(filename) as f:
             data = json.load(f)
-        # Process the data from the JSON file as needed
-        # In this example, we assume the JSON file contains a dictionary
-        # where each key represents a record and each value is another dictionary
-        # that contains the record data.
-        # We can loop through the keys and process each record separately.
+
         records_text = []
         for record_id, record_data in data.items():
             if record_data["publication_type"] == "news":
@@ -64,7 +61,36 @@ def take_from_file():
                 records_text.append(f"Weather forecast -------------")
                 records_text.append(forecast.publish_forecast())
                 records_text.append("------------------------------")
-
+    elif filename.endswith(".xml"):
+        # Read records from XML file
+        xml_file_records = XMLFileRecords(filename)
+        records = xml_file_records.read_records()
+        records_text = []
+        for record in records:
+            record_type = record.get("type")
+            if record_type == "news":
+                # Create a News object and add the delimiter
+                news = News(record.find("text").text, record.find("city").text,
+                            dt.datetime.now().strftime('%d/%m/%Y %H.%M'))
+                records_text.append("News -------------------------")
+                records_text.append(news.publish_news())
+                records_text.append("------------------------------")
+            elif record_type == "ad":
+                # If the publication type is "ad", create an Ad object
+                ad_date = dt.datetime.strptime(record.find("date").text, '%Y-%m-%d').date()
+                days_left = (ad_date - dt.date.today()).days
+                ad = Ad(record.find("text").text, ad_date, days_left)
+                records_text.append(
+                    f"Ad ---------------------------\n{ad.publish_ad()}\n------------------------------")
+            elif record_type == "weather":
+                # If the publication type is "weather", create a WeatherForecast object
+                forecast_date = dt.datetime.strptime(record.find("forecast_date").text, '%Y-%m-%d').date()
+                forecast = WeatherForecast(record.find("city").text, forecast_date,
+                                           record.find("high_temperature").text,
+                                           record.find("low_temperature").text, record.find("conditions").text)
+                records_text.append("Weather forecast -------------")
+                records_text.append(forecast.publish_forecast())
+                records_text.append("------------------------------")
         # Get the directory where the application is located
         app_dir = os.path.dirname(os.path.abspath(__file__))
         # Construct the file path for the output file relative to the application directory
@@ -97,10 +123,6 @@ def take_from_user_input():
     # and store their input in the 'greeting' variable.
     greeting = input("Hello, please select data type. 'News', 'Ad' or 'Weather': ")
 
-    # If the user selected 'News', prompt them to input
-    #  some text and the city name.
-    #  Get the current date and time and store it in
-    #  'create_date' variable using the strftime method.
     if greeting.lower() == 'news':
         text = input("Please input some text: ")
         city = input("Please enter city: ")
@@ -108,10 +130,6 @@ def take_from_user_input():
         news = News(text, city, create_date)
         news.write_news(filename)
 
-    # If the user selected 'Ad', prompt them to input some text and
-    #  the end date of the ad in the format 'DD-MM-YYYY'.
-    # Convert the user-inputted date to a datetime object and
-    #  calculate the number of days left until the ad expires.
     elif greeting.lower() == 'ad':
         text = input("Please input some text: ")
         user_input_date = input("Please advertising's end date (in DD-MM-YYYY format): ")
@@ -122,9 +140,7 @@ def take_from_user_input():
         days_left = (user_date - dt.date.today()).days
         ad = Ad(text, user_date, days_left)
         ad.write_ad(filename)
-    # If the user selected 'Weather', prompt them to input the city,
-    # forecasted date in the format 'DD-MM-YYYY',
-    # high and low temperature, and weather conditions.
+
     elif greeting.lower() == 'weather':
         city = input("Please enter city: ")
         user_input_date = input("Please enter forecasted date (in DD-MM-YYYY format): ")

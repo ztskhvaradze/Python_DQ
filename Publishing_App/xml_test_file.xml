@@ -1,0 +1,17 @@
+<records>
+    <record id="first" type="ad">
+        <text>some XML advertisement</text>
+        <date>2023-05-01</date>
+    </record>
+    <record id="second" type="news">
+        <text>Some XML news</text>
+        <city>Tbilisi</city>
+    </record>
+    <record id="third" type="weather">
+        <city>Batumi in XML file</city>
+        <forecast_date>2023-01-05</forecast_date>
+        <high_temperature>25</high_temperature>
+        <low_temperature>15</low_temperature>
+        <conditions>Sunny</conditions>
+    </record>
+</records>
