@@ -7,9 +7,10 @@ from classes.news import News
 from classes.ad import Ad
 from classes.weather_forecast import WeatherForecast
 from classes.xml_file_records import XMLFileRecords
+from classes.db_connection import DBConnection
 
 
-def take_from_file():
+def take_from_file(db_conn):
     # Prompt the user to enter the filename for the file
     filename = input("Please enter the filename of the file"
                      "(file should be in .txt .json or .xml format)"
@@ -46,6 +47,14 @@ def take_from_file():
                 records_text.append("News -------------------------")
                 records_text.append(news.publish_news())
                 records_text.append("------------------------------")
+
+                news_title = news.title
+                news_content = news.content
+                news_city = news.city
+                news_created_at = news.created_at
+                db_conn.insert_news(title=news_title, content=news_content, city=news_city, created_at=news_created_at)
+
+
             elif record_data["publication_type"] == "ad":
                 # If the publication type is "ad", create an Ad object
                 ad_date = dt.datetime.strptime(record_data["date"], '%Y-%m-%d').date()
@@ -61,6 +70,16 @@ def take_from_file():
                 records_text.append(f"Weather forecast -------------")
                 records_text.append(forecast.publish_forecast())
                 records_text.append("------------------------------")
+
+                weather_city = forecast.city
+                weather_forecast_date = forecast.forecast_date
+                weather_high_temp = forecast.high_temperature
+                weather_low_temp = forecast.low_temperature
+                weather_conditions = forecast.conditions
+                db_conn.insert_weather(city=weather_city, forecast_date=weather_forecast_date,
+                                       high_temperature=weather_high_temp, low_temperature=weather_low_temp,
+                                       conditions=weather_conditions)
+
     elif filename.endswith(".xml"):
         # Read records from XML file
         xml_file_records = XMLFileRecords(filename)
@@ -75,6 +94,13 @@ def take_from_file():
                 records_text.append("News -------------------------")
                 records_text.append(news.publish_news())
                 records_text.append("------------------------------")
+
+                news_title = news.title
+                news_content = news.content
+                news_city = news.city
+                news_created_at = news.created_at
+                db_conn.insert_news(title=news_title, content=news_content, city=news_city, created_at=news_created_at)
+
             elif record_type == "ad":
                 # If the publication type is "ad", create an Ad object
                 ad_date = dt.datetime.strptime(record.find("date").text, '%Y-%m-%d').date()
@@ -82,6 +108,13 @@ def take_from_file():
                 ad = Ad(record.find("text").text, ad_date, days_left)
                 records_text.append(
                     f"Ad ---------------------------\n{ad.publish_ad()}\n------------------------------")
+
+                ad_title = ad.title
+                ad_content = ad.content
+                ad_city = ad.city
+                ad_created_at = ad.created_at
+                db_conn.insert_ad(title=ad_title, content=ad_content, city=ad_city, created_at=ad_created_at)
+
             elif record_type == "weather":
                 # If the publication type is "weather", create a WeatherForecast object
                 forecast_date = dt.datetime.strptime(record.find("forecast_date").text, '%Y-%m-%d').date()
@@ -91,6 +124,16 @@ def take_from_file():
                 records_text.append("Weather forecast -------------")
                 records_text.append(forecast.publish_forecast())
                 records_text.append("------------------------------")
+
+                weather_city = forecast.city
+                weather_forecast_date = forecast.forecast_date
+                weather_high_temp = forecast.high_temperature
+                weather_low_temp = forecast.low_temperature
+                weather_conditions = forecast.conditions
+                db_conn.insert_weather(city=weather_city, forecast_date=weather_forecast_date,
+                                       high_temperature=weather_high_temp, low_temperature=weather_low_temp,
+                                       conditions=weather_conditions)
+
         # Get the directory where the application is located
         app_dir = os.path.dirname(os.path.abspath(__file__))
         # Construct the file path for the output file relative to the application directory
@@ -107,7 +150,7 @@ def take_from_file():
         os.remove(filename)
 
 
-def take_from_user_input():
+def take_from_user_input(db_conn):
     # Prompt the user to input a filename for the notebook.
     filename = input("Please provide name for the notebook where results will be saved (without file extension). "
                      "Note: if file name is not provided, it will be saved in default 'log.txt' file\n"
@@ -128,6 +171,7 @@ def take_from_user_input():
         city = input("Please enter city: ")
         create_date = dt.datetime.now().strftime('%d/%m/%Y %H.%M')
         news = News(text, city, create_date)
+        db_conn.insert_news(title=text, content=city, city=create_date, created_at=create_date)
         news.write_news(filename)
 
     elif greeting.lower() == 'ad':
@@ -139,6 +183,7 @@ def take_from_user_input():
 
         days_left = (user_date - dt.date.today()).days
         ad = Ad(text, user_date, days_left)
+        db_conn.insert_ad(title=text, content=text, end_date=user_date)
         ad.write_ad(filename)
 
     elif greeting.lower() == 'weather':
@@ -156,6 +201,7 @@ def take_from_user_input():
 
         user_date_str = user_date.strftime('%d-%m-%Y')
         weather = WeatherForecast(city, user_date_str, high_temperature, low_temperature, conditions)
+        db_conn.insert_weather(city=city, forecast_date=user_date_str, high_temp=high_temperature, low_temp=low_temperature, conditions=conditions)
         weather.write_weather(filename)
 
         # Write the results to CSV files
@@ -163,14 +209,18 @@ def take_from_user_input():
 
 
 def main():
+    # Initialize the DBConnection instance
+    database_name = "my_database.db"
+    db_conn = DBConnection(database_name)
+
     # Ask the user to select a source for records
     source = input("Please select a source for records. 'Provide file' or 'User input': ")
     if source.lower() == 'provide file':
         # If the user selects "Provide file", call the take_from_file function and capture the result
-        take_from_file()
+        take_from_file(db_conn)
     elif source.lower() == 'user input':
         # If the user selects "User input", call the take_from_user_input function
-        take_from_user_input()
+        take_from_user_input(db_conn)
 
 
 if __name__ == '__main__':
